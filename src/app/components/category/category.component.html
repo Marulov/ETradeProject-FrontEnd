@@ -1,0 +1,7 @@
+<div *ngIf="dataLoaded==false" class="spinner-border text-primary" role="status">
+  <span class="visually-hidden">Loading...</span>
+</div>
+<ul *ngIf="dataLoaded==true" class="list-group">
+  <li routerLink="/products" class="list-group-item" >Tüm Ürünler</li>
+  <li (click)="setCurrentCategory(category)" routerLink="/products/category/{{category.categoryId}}"  *ngFor="let category of categories" [class]="getCurrentCategoryClass(category)">{{category.categoryName}}</li>
+</ul>
