@@ -39,4 +39,14 @@ export class CategoryComponent implements OnInit {
     }
   }
 
+  setCurrentAllCategory(){
+    if(this.currentCategory){
+      this.currentCategory = {categoryId:0, categoryName:""}
+    }
+  }
+
+  getAllCategoryClass(){
+    return "list-group-item list-group-item-dark"
+  }
+
 }

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { Product } from 'src/app/models/product';
+import { CartService } from 'src/app/services/cart.service';
 import { ProductService } from 'src/app/services/product.service';
 
 @Component({
@@ -10,33 +12,44 @@ import { ProductService } from 'src/app/services/product.service';
 })
 export class ProductComponent implements OnInit {
   products: Product[] = [];
-  dataLoaded = false
-  filterText=""
+  dataLoaded = false;
+  filterText = '';
 
-  constructor(private ProductService:ProductService, private activatedRoute: ActivatedRoute) {}
+  constructor(
+    private ProductService: ProductService,
+    private activatedRoute: ActivatedRoute,
+    private toastrService: ToastrService,
+    private cartService:CartService
+  ) {}
 
   ngOnInit(): void {
-    this.activatedRoute.params.subscribe(params=>{
-      if(params["categoryId"]){
-        this.getProductsByCategory(params["categoryId"])
+    this.activatedRoute.params.subscribe((params) => {
+      if (params['categoryId']) {
+        this.getProductsByCategory(params['categoryId']);
+      } else {
+        this.getProducts();
       }
-      else{
-        this.getProducts()
-      }
-    })
+    });
   }
 
   getProducts() {
-    this.ProductService.getProducts().subscribe(response=>{
-      this.products = response.data
-      this.dataLoaded = true
-    })
+    this.ProductService.getProducts().subscribe((response) => {
+      this.products = response.data;
+      this.dataLoaded = true;
+    });
   }
 
-  getProductsByCategory(categoryId:number){
-    this.ProductService.getProductsByCategory(categoryId).subscribe(response=>{
-      this.products = response.data
-      this.dataLoaded = true
-    })
+  getProductsByCategory(categoryId: number) {
+    this.ProductService.getProductsByCategory(categoryId).subscribe(
+      (response) => {
+        this.products = response.data;
+        this.dataLoaded = true;
+      }
+    );
+  }
+
+  addToCart(product: Product) {
+    this.toastrService.success("Sepete eklendi", product.productName)
+    this.cartService.addToCart(product)
   }
 }
